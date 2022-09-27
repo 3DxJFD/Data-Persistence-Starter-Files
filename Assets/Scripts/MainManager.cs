@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,22 +8,34 @@ using Random = UnityEngine.Random;
 
 public class MainManager : MonoBehaviour
 {
+    public static MainManager mainInstance;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScore;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
+    private string userName;
+    private int bestScore;
+    private string bestName;
     
     private bool m_GameOver = false;
 
     
     // Start is called before the first frame update
     void Start()
+
+
     {
+        userName = User.userInstance.userName;
+        bestName = User.userInstance.MaxName;
+        bestScore = User.userInstance.maxPoints;
+        BestScore.text = "Best Score : " + bestName + ":" + bestScore;
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -67,7 +79,9 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        ScoreText.text = userName + $" Score : {m_Points}";
+        User.userInstance.MaxPlayer(userName, m_Points);
+        BestScore.text = "Best Score : " + bestName + ":" + bestScore;
     }
 
     public void GameOver()
